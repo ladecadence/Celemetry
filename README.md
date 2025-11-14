@@ -31,7 +31,7 @@ Also you can encode custom data fields with the field markers:
 * 0x11: Blob: Custom lenght data array.
 
 ## Library use example
-```
+```c
     // create new packet
     celemetry_packet_t *packet = celemetry_new_packet(1234);
 
