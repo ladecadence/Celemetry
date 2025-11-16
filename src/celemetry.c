@@ -95,12 +95,13 @@ uint8_t celemetry_add_field(celemetry_packet_t *packet, uint8_t field_type, uint
     case CELEMETRY_DATE:
     case CELEMETRY_TIME:
     case CELEMETRY_MILLIS:
-    caseCELEMETRY_LAT:
+    case CELEMETRY_LAT:
     case CELEMETRY_LON:
     case CELEMETRY_ALT:
     case CELEMETRY_U32:
     case CELEMETRY_I32:
     case CELEMETRY_F32:
+    case CELEMETRY_CRC32:
         // add field type
         packet->data[packet->size] = field_type;
         // add data
@@ -184,6 +185,7 @@ void *celemetry_get_field(celemetry_packet_t *packet, uint8_t field_type)
             case CELEMETRY_U32:
             case CELEMETRY_I32:
             case CELEMETRY_F32:
+            case CELEMETRY_CRC32:
                 uint32_t *data32 = (uint32_t *)&packet->data[pos + 1];
                 return data32;
                 break;
@@ -220,6 +222,7 @@ void *celemetry_get_field(celemetry_packet_t *packet, uint8_t field_type)
             case CELEMETRY_U32:
             case CELEMETRY_I32:
             case CELEMETRY_F32:
+            case CELEMETRY_CRC32:
                 pos = pos + 5;
                 break;
             case CELEMETRY_HDG:
@@ -275,6 +278,7 @@ void *celemetry_get_field_number(celemetry_packet_t *packet, uint8_t field_type,
                 case CELEMETRY_U32:
                 case CELEMETRY_I32:
                 case CELEMETRY_F32:
+                case CELEMETRY_CRC32:
                     uint32_t *data32 = (uint32_t *)&packet->data[pos + 1];
                     return data32;
                     break;
@@ -311,6 +315,7 @@ void *celemetry_get_field_number(celemetry_packet_t *packet, uint8_t field_type,
                 case CELEMETRY_U32:
                 case CELEMETRY_I32:
                 case CELEMETRY_F32:
+                case CELEMETRY_CRC32:
                     pos = pos + 5;
                     break;
                 case CELEMETRY_HDG:
@@ -346,6 +351,7 @@ void *celemetry_get_field_number(celemetry_packet_t *packet, uint8_t field_type,
             case CELEMETRY_U32:
             case CELEMETRY_I32:
             case CELEMETRY_F32:
+            case CELEMETRY_CRC32:
                 pos = pos + 5;
                 break;
             case CELEMETRY_HDG:
@@ -552,6 +558,24 @@ uint8_t celemetry_get_arate(celemetry_packet_t *packet, int8_t *arate)
     if (parate)
     {
         *arate = *parate;
+        return CELEMETRY_OK;
+    }
+    else
+    {
+        return CELEMETRY_ERR_FIELD;
+    }
+}
+
+uint8_t celemetry_get_crc32(celemetry_packet_t *packet, uint32_t *crc)
+{
+    uint32_t *pcrc = (uint32_t *)celemetry_get_field(packet, CELEMETRY_CRC32);
+    if (pcrc)
+    {
+        *crc = *pcrc;
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
+        {
+            *crc = __bswap_32(*crc);
+        }
         return CELEMETRY_OK;
     }
     else
