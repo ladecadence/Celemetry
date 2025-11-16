@@ -748,7 +748,7 @@ char *celemetry_base40_decode(char *data, uint32_t code)
 }
 
 // standard crc32b algorithm
-uint32_t celemetry_crc32(const uint8_t *data, uint32_t len)
+uint32_t celemetry_crc32b(const uint8_t *data, uint32_t len)
 {
     uint32_t crc = 0xFFFFFFFF;
 
