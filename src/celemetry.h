@@ -99,5 +99,6 @@ size_t celemetry_cobs_encode(uint8_t *data, size_t length, uint8_t *buffer);
 size_t celemetry_cobs_decode(const uint8_t *buffer, size_t length, void *data);
 uint32_t celemetry_base40_encode(char* data);
 char* celemetry_base40_decode(char* data, uint32_t code);
+uint32_t celemetry_crc32b(const uint8_t* data, uint32_t size);
 
 #endif
