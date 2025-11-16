@@ -41,15 +41,17 @@
 #define CELEMETRY_ALT         0x07
 #define CELEMETRY_HDG         0x08
 #define CELEMETRY_ARATE       0x09
+#define CELEMETRY_CRC32       0x0A
+
 // generic fields
-#define CELEMETRY_U8          0x0A
-#define CELEMETRY_I8          0x0B
-#define CELEMETRY_U16         0x0C
-#define CELEMETRY_I16         0x0D
-#define CELEMETRY_U32         0x0E
-#define CELEMETRY_I32         0x0F
-#define CELEMETRY_F32         0x10
-#define CELEMETRY_BLOB        0x11
+#define CELEMETRY_U8          0x20
+#define CELEMETRY_I8          0x21
+#define CELEMETRY_U16         0x22
+#define CELEMETRY_I16         0x23
+#define CELEMETRY_U32         0x24
+#define CELEMETRY_I32         0x25
+#define CELEMETRY_F32         0x26
+#define CELEMETRY_BLOB        0x27
 
 // field sizes
 #define CELEMETRY_PACKET_NUM_BYTES  4
@@ -62,6 +64,7 @@
 #define CELEMETRY_ALT_BYTES         4
 #define CELEMETRY_HDG_BYTES         2
 #define CELEMETRY_ARATE_BYTES       1
+#define CELEMETRY_CRC32_BYTES       4
 #define CELEMETRY_U8_BYTES          1
 #define CELEMETRY_I8_BYTES          1
 #define CELEMETRY_U16_BYTES         2

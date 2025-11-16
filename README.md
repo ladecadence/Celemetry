@@ -19,16 +19,17 @@ The library defines some usual telemetry fields:
 * 0x07: Altitude          - uint32
 * 0x08: Heading           - uint16: 0 - 359º
 * 0x09: Ascension rate    - int8: -127 - 128 m/s
+* 0x0A: CRC32             - uint32: optional CRC32 calculation of all bytes in the packet (less the CRC32 field itself)
 
 Also you can encode custom data fields with the field markers:
-* 0x0A: uint8
-* 0x0B: int8
-* 0x0C: uint16
-* 0x0D: int16
-* 0x0E: uint32
-* 0x0F: int32
-* 0x10: float32
-* 0x11: Blob: Custom lenght data array.
+* 0x20: uint8
+* 0x21: int8
+* 0x22: uint16
+* 0x23: int16
+* 0x24: uint32
+* 0x25: int32
+* 0x26: float32
+* 0x27: Blob: Custom lenght data array.
 
 ## Library use example
 ```c
