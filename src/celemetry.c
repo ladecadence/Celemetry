@@ -36,7 +36,8 @@ celemetry_packet_t *celemetry_new_packet(uint32_t packet_id)
     return packet;
 }
 
-celemetry_packet_t* celemetry_new_packet_from_data(uint8_t* rdata, size_t len) {
+celemetry_packet_t *celemetry_new_packet_from_data(uint8_t *rdata, size_t len)
+{
     // reserve memory
     uint8_t *data = (uint8_t *)malloc(CELEMETRY_PACKET_LEN);
     if (!data)
@@ -158,6 +159,31 @@ uint8_t celemetry_add_field(celemetry_packet_t *packet, uint8_t field_type, uint
     default:
         return CELEMETRY_BAD_DATA;
     }
+    return CELEMETRY_OK;
+}
+
+uint8_t celemetry_add_crc32(celemetry_packet_t *packet)
+{
+    // check size
+    if (CELEMETRY_CRC32_BYTES + packet->size > CELEMETRY_PACKET_LEN)
+    {
+        return CELEMETRY_ERR_MEM;
+    }
+    // ok, add CRC32
+    // calculate CRC
+    uint32_t crc32 = celemetry_crc32b(packet->data, packet->size);
+    if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
+    {
+        crc32 = __bswap_32(crc32);
+    }
+    // ok, add field type
+    packet->data[packet->size] = CELEMETRY_CRC32;
+    // and data
+    for (int i = 0; i < CELEMETRY_CRC32_BYTES; i++)
+    {
+        packet->data[packet->size + 1 + i] = crc32 >> i * 8;
+    }
+    packet->size = packet->size + CELEMETRY_CRC32_BYTES + 1;
     return CELEMETRY_OK;
 }
 
@@ -722,15 +748,19 @@ char *celemetry_base40_decode(char *data, uint32_t code)
 }
 
 // standard crc32b algorithm
-uint32_t celemetry_crc32(const uint8_t *data, uint32_t len) {
+uint32_t celemetry_crc32(const uint8_t *data, uint32_t len)
+{
     uint32_t crc = 0xFFFFFFFF;
 
-    for(uint32_t i = 0; i < len; i++) {
+    for (uint32_t i = 0; i < len; i++)
+    {
         uint8_t ch = data[i];
-        for(uint32_t j = 0; j < 8; j++) {
+        for (uint32_t j = 0; j < 8; j++)
+        {
             uint32_t b = (ch ^ crc) & 1;
             crc >>= 1;
-            if(b) crc = crc ^ 0xEDB88320;
+            if (b)
+                crc = crc ^ 0xEDB88320;
             ch >>= 1;
         }
     }
