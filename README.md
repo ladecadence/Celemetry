@@ -36,8 +36,7 @@ Also you can encode custom data fields with the field markers:
     // create new packet
     celemetry_packet_t *packet = celemetry_new_packet(1234);
 
-    if (packet)
-    { 
+    if (packet) { 
         // add data
         char* MISSION = "EKI2";
         uint32_t mission_bytes = celemetry_base40_encode(MISSION);
@@ -77,26 +76,22 @@ Also you can encode custom data fields with the field markers:
 
             // and get fields
             uint32_t packet_num;
-            if (celemetry_get_packet_number(packet, &packet_num) == CELEMETRY_OK)
-            {
+            if (celemetry_get_packet_number(packet, &packet_num) == CELEMETRY_OK) {
                 printf("Packet num: %d\n", packet_num);
             }
 
             char id[6];
-            if (celemetry_get_id(packet, id) == CELEMETRY_OK)
-            {
+            if (celemetry_get_id(packet, id) == CELEMETRY_OK) {
                 printf("ID: %s\n", id);
             }
 
             int16_t heading;
-            if (celemetry_get_hdg(packet, &heading) == CELEMETRY_OK)
-            {
+            if (celemetry_get_hdg(packet, &heading) == CELEMETRY_OK) {
                 printf("Heading: %d\n", heading);
             }
 
             uint32_t d2;
-            if (celemetry_get_u32(packet, &d2, 2) == CELEMETRY_OK)
-            {
+            if (celemetry_get_u32(packet, &d2, 2) == CELEMETRY_OK) {
                 printf("Data2: %d\n", d2);
             }
 
