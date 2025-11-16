@@ -25,6 +25,9 @@ void main(void)
         uint32_t data2 = 3456;
         celemetry_add_field(packet, CELEMETRY_U32, CELEMETRY_U32_BYTES, &data2);
 
+        // include CRC32 calculation
+        celemetry_add_crc32(packet);
+
         // print it
         printf("Packet:  ");
         for (size_t i = 0; i < packet->size; i++)
@@ -58,7 +61,13 @@ void main(void)
             }
             printf("\n");
 
-            // ok, get fields
+            // ok, first check CRC32
+            if (celemetry_check_crc32(packet2) == CELEMETRY_OK) {
+                printf("CRC32 correct!\n");
+            } else {
+                printf("CRC32 incorrect!\n");
+            }
+
             uint32_t packet_num;
             if (celemetry_get_packet_number(packet, &packet_num) == CELEMETRY_OK)
             {
