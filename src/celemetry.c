@@ -654,8 +654,8 @@ uint8_t celemetry_check_crc32(celemetry_packet_t *packet) {
         return CELEMETRY_ERR_FIELD;
     }
     // ok, we have it, CRC32 should be the last field, so calculate the CRC32 
-    // removing the last 4 bytes
-    uint32_t calculated_crc32 = celemetry_crc32b(packet->data, packet->size - CELEMETRY_CRC32_BYTES);
+    // removing the crc field bytes
+    uint32_t calculated_crc32 = celemetry_crc32b(packet->data, packet->size - CELEMETRY_CRC32_BYTES - 1);
 
     // check it
     if (crc32 == calculated_crc32) {
