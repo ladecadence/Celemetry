@@ -26,6 +26,7 @@
 #define CELEMETRY_ERR_MEM   1
 #define CELEMETRY_BAD_DATA  2
 #define CELEMETRY_ERR_FIELD 3
+#define CELEMETRY_ERR_CRC   4
 
 // packet max len (LoRa)
 #define CELEMETRY_PACKET_LEN 255
@@ -97,6 +98,7 @@ uint8_t celemetry_get_arate(celemetry_packet_t *packet, int8_t* arate);
 uint8_t celemetry_get_crc32(celemetry_packet_t *packet, uint32_t* crc);
 uint8_t celemetry_get_u32(celemetry_packet_t *packet, uint32_t *value, uint8_t number);
 uint8_t celemetry_get_i32(celemetry_packet_t *packet, int32_t *value, uint8_t number);
+uint8_t celemetry_check_crc32(celemetry_packet_t *packet);
 size_t celemetry_cobs_encode(uint8_t *data, size_t length, uint8_t *buffer);
 size_t celemetry_cobs_decode(const uint8_t *buffer, size_t length, void *data);
 uint32_t celemetry_base40_encode(char* data);

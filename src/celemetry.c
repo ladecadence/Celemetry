@@ -647,6 +647,24 @@ uint8_t celemetry_get_i32(celemetry_packet_t *packet, int32_t *value, uint8_t nu
     }
 }
 
+uint8_t celemetry_check_crc32(celemetry_packet_t *packet) {
+    // first check if packet has a CRC32 field
+    uint32_t crc32;
+    if (celemetry_get_crc32(packet, &crc32) != CELEMETRY_OK) {
+        return CELEMETRY_ERR_FIELD;
+    }
+    // ok, we have it, CRC32 should be the last field, so calculate the CRC32 
+    // removing the last 4 bytes
+    uint32_t calculated_crc32 = celemetry_crc32b(packet->data, packet->size - CELEMETRY_CRC32_BYTES);
+
+    // check it
+    if (crc32 == calculated_crc32) {
+        return CELEMETRY_OK;
+    } else {
+        return CELEMETRY_ERR_CRC;
+    }
+}
+
 size_t celemetry_cobs_encode(uint8_t *data, size_t length, uint8_t *buffer)
 {
     uint8_t *encode = buffer;  // Encoded byte pointer
