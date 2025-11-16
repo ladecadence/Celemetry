@@ -262,7 +262,7 @@ void *celemetry_get_field(celemetry_packet_t *packet, uint8_t field_type)
                 pos = pos + 2;
                 break;
             case CELEMETRY_BLOB:
-                pos = pos + packet->data[pos + 1] + 1;
+                pos = pos + packet->data[pos + 1] + 2;
                 break;
             default:
                 return NULL;
