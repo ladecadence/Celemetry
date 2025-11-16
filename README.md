@@ -55,6 +55,9 @@ Also you can encode custom data fields with the field markers:
         uint32_t data2 = 3456;
         celemetry_add_field(packet, CELEMETRY_U32, CELEMETRY_U32_BYTES, &data2);
 
+        // include CRC32 calculation
+        celemetry_add_crc32(packet);
+
         // encode it for transmission
         uint8_t coded[CELEMETRY_PACKET_LEN];
         size_t enc_size = celemetry_cobs_encode(packet->data, packet->size, coded);
@@ -64,33 +67,42 @@ Also you can encode custom data fields with the field markers:
         size_t dec_size = celemetry_cobs_decode(coded, enc_size, decoded);
         celemetry_packet_t *packet2 = celemetry_new_packet_from_data(decoded, dec_size);
 
-        // ok, get fields
-        uint32_t packet_num;
-        if (celemetry_get_packet_number(packet, &packet_num) == CELEMETRY_OK)
-        {
-            printf("Packet num: %d\n", packet_num);
-        }
+        if (packet2) {
+            // ok, first check CRC32
+            if (celemetry_check_crc32(packet2) == CELEMETRY_OK) {
+                printf("CRC32 correct!\n");
+            } else {
+                printf("CRC32 incorrect!\n");
+            }
 
-        char id[6];
-        if (celemetry_get_id(packet, id) == CELEMETRY_OK)
-        {
-            printf("ID: %s\n", id);
-        }
+            // and get fields
+            uint32_t packet_num;
+            if (celemetry_get_packet_number(packet, &packet_num) == CELEMETRY_OK)
+            {
+                printf("Packet num: %d\n", packet_num);
+            }
 
-        int16_t heading;
-        if (celemetry_get_hdg(packet, &heading) == CELEMETRY_OK)
-        {
-            printf("Heading: %d\n", heading);
-        }
+            char id[6];
+            if (celemetry_get_id(packet, id) == CELEMETRY_OK)
+            {
+                printf("ID: %s\n", id);
+            }
 
-        uint32_t d2;
-        if (celemetry_get_u32(packet, &d2, 2) == CELEMETRY_OK)
-        {
-            printf("Data2: %d\n", d2);
-        }
+            int16_t heading;
+            if (celemetry_get_hdg(packet, &heading) == CELEMETRY_OK)
+            {
+                printf("Heading: %d\n", heading);
+            }
 
+            uint32_t d2;
+            if (celemetry_get_u32(packet, &d2, 2) == CELEMETRY_OK)
+            {
+                printf("Data2: %d\n", d2);
+            }
+
+            celemetry_free(packet2);
+        }
         celemetry_free(packet);
-        celemetry_free(packet2);
     }
 
 ```
