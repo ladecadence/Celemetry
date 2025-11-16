@@ -14,17 +14,17 @@ celemetry_packet_t *celemetry_new_packet(uint32_t packet_id)
     int e = 1;
     if (*((char *)&e) == 1)
     {
-        packet->endianness = CELEMETRY_LITTLE_ENDIAN;
+        packet->system_endianness = CELEMETRY_LITTLE_ENDIAN;
     }
     else
     {
-        packet->endianness = CELEMETRY_BIG_ENDIAN;
+        packet->system_endianness = CELEMETRY_BIG_ENDIAN;
     }
 
     // ok, add packet_id field (check endianess)
     data[0] = CELEMETRY_PACKET_NUM;
     // use network byte order
-    if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+    if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         packet_id = __bswap_32(packet_id);
     for (int i = 0; i < CELEMETRY_PACKET_NUM_BYTES; i++)
     {
@@ -46,8 +46,17 @@ celemetry_packet_t* celemetry_new_packet_from_data(uint8_t* rdata, size_t len) {
     celemetry_packet_t *packet = (celemetry_packet_t *)malloc(sizeof(celemetry_packet_t));
     packet->data = data;
 
-    // rdata is suposed to be already encoded, so it should be big endian
-    packet->endianness = CELEMETRY_BIG_ENDIAN;
+    // check endianness
+    int e = 1;
+    if (*((char *)&e) == 1)
+    {
+        packet->system_endianness = CELEMETRY_LITTLE_ENDIAN;
+    }
+    else
+    {
+        packet->system_endianness = CELEMETRY_BIG_ENDIAN;
+    }
+
     // copy data
     memcpy(packet->data, rdata, len);
     packet->size = len;
@@ -96,7 +105,7 @@ uint8_t celemetry_add_field(celemetry_packet_t *packet, uint8_t field_type, uint
         packet->data[packet->size] = field_type;
         // add data
         uint32_t field_data32 = *(uint32_t *)field;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             field_data32 = __bswap_32(field_data32);
         }
@@ -113,7 +122,7 @@ uint8_t celemetry_add_field(celemetry_packet_t *packet, uint8_t field_type, uint
         packet->data[packet->size] = field_type;
         // add data
         uint16_t field_data16 = *(uint16_t *)field;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             field_data16 = __bswap_16(field_data16);
         }
@@ -370,7 +379,7 @@ uint8_t celemetry_get_packet_number(celemetry_packet_t *packet, uint32_t *packet
     if (ppacket_num)
     {
         *packet_num = *ppacket_num;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             *packet_num = __bswap_32(*packet_num);
         }
@@ -388,7 +397,7 @@ uint8_t celemetry_get_date(celemetry_packet_t *packet, char *date)
     if (pdate)
     {
         uint32_t idate = *pdate;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             idate = __bswap_32(idate);
         }
@@ -409,7 +418,7 @@ uint8_t celemetry_get_time(celemetry_packet_t *packet, char *time)
     if (ptime)
     {
         uint32_t itime = *ptime;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             itime = __bswap_32(itime);
         }
@@ -430,7 +439,7 @@ uint8_t celemetry_get_millis(celemetry_packet_t *packet, uint32_t *millis)
     if (pmillis)
     {
         *millis = *pmillis;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             *millis = __bswap_32(*millis);
         }
@@ -448,7 +457,7 @@ uint8_t celemetry_get_id(celemetry_packet_t *packet, char *id)
     if (pid)
     {
         uint32_t iid = *pid;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             iid = __bswap_32(iid);
         }
@@ -469,7 +478,7 @@ uint8_t celemetry_get_lat(celemetry_packet_t *packet, float *lat)
     if (plat)
     {
         uint32_t ilat = *plat;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             ilat = __bswap_32(ilat);
         }
@@ -488,7 +497,7 @@ uint8_t celemetry_get_lon(celemetry_packet_t *packet, float *lon)
     if (plon)
     {
         uint32_t ilon = *plon;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             ilon = __bswap_32(ilon);
         }
@@ -507,7 +516,7 @@ uint8_t celemetry_get_alt(celemetry_packet_t *packet, uint32_t *alt)
     if (palt)
     {
         *alt = *palt;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             *alt = __bswap_32(*alt);
         }
@@ -525,7 +534,7 @@ uint8_t celemetry_get_hdg(celemetry_packet_t *packet, uint16_t *hdg)
     if (phdg)
     {
         *hdg = *phdg;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             *hdg = __bswap_16(*hdg);
         }
@@ -558,7 +567,7 @@ uint8_t celemetry_get_u32(celemetry_packet_t *packet, uint32_t *value, uint8_t n
     if (pvalue)
     {
         *value = *pvalue;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             *value = __bswap_32(*value);
         }
@@ -576,7 +585,7 @@ uint8_t celemetry_get_i32(celemetry_packet_t *packet, int32_t *value, uint8_t nu
     if (pvalue)
     {
         *value = *pvalue;
-        if (packet->endianness == CELEMETRY_LITTLE_ENDIAN)
+        if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN)
         {
             *value = __bswap_32(*value);
         }

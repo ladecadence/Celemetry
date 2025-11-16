@@ -72,7 +72,7 @@
 
 typedef struct {
     uint8_t size;
-    uint8_t endianness;
+    uint8_t system_endianness;
     uint8_t* data;
 } celemetry_packet_t;
 
