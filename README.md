@@ -20,6 +20,7 @@ The library defines some usual telemetry fields:
 * 0x08: Heading           - uint16: 0 - 359º
 * 0x09: Ascension rate    - int8: -127 - 128 m/s
 * 0x0A: CRC32             - uint32: optional CRC32 calculation of all bytes in the packet (less the CRC32 field itself)
+* 0x0B: SSDV              - 128 bytes: SSDV packets are 256 bytes, as this is bigger than LoRa packet lenght, we need to split them in two packets, adding a byte to tell if it's part 0 or 1.
 
 Also you can encode custom data fields with the field markers:
 * 0x20: uint8
@@ -101,3 +102,5 @@ Also you can encode custom data fields with the field markers:
     }
 
 ```
+
+Complete examples of basic packet manipulation and SSDV packets can be found on /tests 
