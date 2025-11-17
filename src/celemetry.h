@@ -96,7 +96,7 @@ uint8_t celemetry_get_alt(celemetry_packet_t *packet, uint32_t *alt);
 uint8_t celemetry_get_hdg(celemetry_packet_t *packet, uint16_t *hdg);
 uint8_t celemetry_get_arate(celemetry_packet_t *packet, int8_t *arate);
 uint8_t celemetry_get_crc32(celemetry_packet_t *packet, uint32_t *crc);
-uint8_t celemetry_get_ssdv(celemetry_packet_t *packet, uint8_t* part, uint8_t* ssdv);
+uint8_t celemetry_get_ssdv(celemetry_packet_t *packet, uint8_t* part, uint8_t** ssdv);
 uint8_t celemetry_get_u32(celemetry_packet_t *packet, uint32_t *value, uint8_t number);
 uint8_t celemetry_get_i32(celemetry_packet_t *packet, int32_t *value, uint8_t number);
 uint8_t celemetry_get_blob(celemetry_packet_t *packet, uint8_t* len, uint8_t **blob);

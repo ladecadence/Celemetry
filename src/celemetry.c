@@ -545,11 +545,11 @@ uint8_t celemetry_get_crc32(celemetry_packet_t *packet, uint32_t *crc) {
     }
 }
 
-uint8_t celemetry_get_ssdv(celemetry_packet_t *packet, uint8_t* part, uint8_t *ssdv) {
+uint8_t celemetry_get_ssdv(celemetry_packet_t *packet, uint8_t* part, uint8_t **ssdv) {
     uint8_t *pssdv = (uint8_t *)celemetry_get_field(packet, CELEMETRY_SSDV);
     if (pssdv) {
         *part = *pssdv;
-        ssdv = pssdv+1;
+        *ssdv = pssdv+1;
         return CELEMETRY_OK;
     } else {
         return CELEMETRY_ERR_FIELD;
