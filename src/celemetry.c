@@ -161,6 +161,24 @@ uint8_t celemetry_add_crc32(celemetry_packet_t *packet) {
     return CELEMETRY_OK;
 }
 
+uint8_t celemetry_add_ssdv(celemetry_packet_t *packet, uint8_t part, uint8_t *ssdv) {
+    // check size
+    if (CELEMETRY_SSDV_BYTES + packet->size > CELEMETRY_PACKET_LEN) {
+        return CELEMETRY_ERR_MEM;
+    }
+
+    // ok, add field type
+    packet->data[packet->size] = CELEMETRY_SSDV;
+    // add ssdv part
+    packet->data[packet->size + 1] = part;
+    // and data
+    for (int i = 0; i < CELEMETRY_SSDV_BYTES; i++) {
+        packet->data[packet->size + 2 + i] = ssdv[i];
+    }
+    packet->size = packet->size + CELEMETRY_SSDV_BYTES + 2;
+    return CELEMETRY_OK;
+}
+
 void *celemetry_get_field(celemetry_packet_t *packet, uint8_t field_type) {
     // try to find field marker
     uint8_t found = 0;
@@ -199,6 +217,10 @@ void *celemetry_get_field(celemetry_packet_t *packet, uint8_t field_type) {
                 break;
             case CELEMETRY_BLOB:
                 return &packet->data[pos + 1];
+                break;
+            case CELEMETRY_SSDV:
+                return &packet->data[pos + 1];
+                break;
             default:
                 return NULL;
             }
@@ -230,6 +252,9 @@ void *celemetry_get_field(celemetry_packet_t *packet, uint8_t field_type) {
                 break;
             case CELEMETRY_BLOB:
                 pos = pos + packet->data[pos + 1] + 2;
+                break;
+            case CELEMETRY_SSDV:
+                pos = pos + CELEMETRY_SSDV_BYTES + 2;
                 break;
             default:
                 return NULL;
@@ -283,6 +308,10 @@ void *celemetry_get_field_number(celemetry_packet_t *packet, uint8_t field_type,
                     break;
                 case CELEMETRY_BLOB:
                     return &packet->data[pos + 1];
+                    break;
+                case CELEMETRY_SSDV:
+                    return &packet->data[pos + 1];
+                    break;
                 default:
                     return NULL;
                 }
@@ -314,6 +343,9 @@ void *celemetry_get_field_number(celemetry_packet_t *packet, uint8_t field_type,
                     break;
                 case CELEMETRY_BLOB:
                     pos = pos + packet->data[pos + 1] + 2;
+                    break;
+                case CELEMETRY_SSDV:
+                    pos = pos + CELEMETRY_SSDV_BYTES + 2;
                     break;
                 default:
                     return NULL;
@@ -347,6 +379,9 @@ void *celemetry_get_field_number(celemetry_packet_t *packet, uint8_t field_type,
                 break;
             case CELEMETRY_BLOB:
                 pos = pos + packet->data[pos + 1] + 2;
+                break;
+            case CELEMETRY_SSDV:
+                pos = pos + CELEMETRY_SSDV_BYTES + 2;
                 break;
             default:
                 return NULL;
@@ -510,6 +545,17 @@ uint8_t celemetry_get_crc32(celemetry_packet_t *packet, uint32_t *crc) {
     }
 }
 
+uint8_t celemetry_get_ssdv(celemetry_packet_t *packet, uint8_t* part, uint8_t *ssdv) {
+    uint8_t *pssdv = (uint8_t *)celemetry_get_field(packet, CELEMETRY_SSDV);
+    if (pssdv) {
+        *part = *pssdv;
+        ssdv = pssdv+1;
+        return CELEMETRY_OK;
+    } else {
+        return CELEMETRY_ERR_FIELD;
+    }
+}
+
 // custom fields
 uint8_t celemetry_get_u32(celemetry_packet_t *packet, uint32_t *value, uint8_t number) {
     uint32_t *pvalue = (uint32_t *)celemetry_get_field_number(packet, CELEMETRY_U32, number);
@@ -531,6 +577,17 @@ uint8_t celemetry_get_i32(celemetry_packet_t *packet, int32_t *value, uint8_t nu
         if (packet->system_endianness == CELEMETRY_LITTLE_ENDIAN) {
             *value = __bswap_32(*value);
         }
+        return CELEMETRY_OK;
+    } else {
+        return CELEMETRY_ERR_FIELD;
+    }
+}
+
+uint8_t celemetry_get_blob(celemetry_packet_t *packet, uint8_t* len, uint8_t *blob) {
+    uint8_t *pblob = (uint8_t *)celemetry_get_field(packet, CELEMETRY_BLOB);
+    if (pblob) {
+        *len = *pblob;
+        blob = pblob+1;
         return CELEMETRY_OK;
     } else {
         return CELEMETRY_ERR_FIELD;

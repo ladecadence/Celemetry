@@ -40,6 +40,7 @@
 #define CELEMETRY_HDG 0x08
 #define CELEMETRY_ARATE 0x09
 #define CELEMETRY_CRC32 0x0A
+#define CELEMETRY_SSDV 0x0B
 
 // generic fields
 #define CELEMETRY_U8 0x20
@@ -63,6 +64,7 @@
 #define CELEMETRY_HDG_BYTES 2
 #define CELEMETRY_ARATE_BYTES 1
 #define CELEMETRY_CRC32_BYTES 4
+#define CELEMETRY_SSDV_BYTES 128
 #define CELEMETRY_U8_BYTES 1
 #define CELEMETRY_I8_BYTES 1
 #define CELEMETRY_U16_BYTES 2
@@ -83,6 +85,7 @@ void celemetry_free(celemetry_packet_t *packet);
 uint8_t *celemetry_get_data(celemetry_packet_t *packet);
 uint8_t celemetry_add_field(celemetry_packet_t *packet, uint8_t field_type, uint8_t field_len, void *field);
 uint8_t celemetry_add_crc32(celemetry_packet_t *packet);
+uint8_t celemetry_add_ssdv(celemetry_packet_t *packet, uint8_t part, uint8_t* ssdv);
 void *celemetry_get_field(celemetry_packet_t *packet, uint8_t field_type);
 uint8_t celemetry_get_packet_number(celemetry_packet_t *packet, uint32_t *packet_num);
 uint8_t celemetry_get_id(celemetry_packet_t *packet, char *id);
@@ -93,8 +96,10 @@ uint8_t celemetry_get_alt(celemetry_packet_t *packet, uint32_t *alt);
 uint8_t celemetry_get_hdg(celemetry_packet_t *packet, uint16_t *hdg);
 uint8_t celemetry_get_arate(celemetry_packet_t *packet, int8_t *arate);
 uint8_t celemetry_get_crc32(celemetry_packet_t *packet, uint32_t *crc);
+uint8_t celemetry_get_ssdv(celemetry_packet_t *packet, uint8_t* part, uint8_t* ssdv);
 uint8_t celemetry_get_u32(celemetry_packet_t *packet, uint32_t *value, uint8_t number);
 uint8_t celemetry_get_i32(celemetry_packet_t *packet, int32_t *value, uint8_t number);
+uint8_t celemetry_get_blob(celemetry_packet_t *packet, uint8_t* len, uint8_t *blob);
 uint8_t celemetry_check_crc32(celemetry_packet_t *packet);
 size_t celemetry_cobs_encode(uint8_t *data, size_t length, uint8_t *buffer);
 size_t celemetry_cobs_decode(const uint8_t *buffer, size_t length, void *data);
