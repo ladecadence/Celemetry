@@ -99,7 +99,7 @@ uint8_t celemetry_get_crc32(celemetry_packet_t *packet, uint32_t *crc);
 uint8_t celemetry_get_ssdv(celemetry_packet_t *packet, uint8_t* part, uint8_t* ssdv);
 uint8_t celemetry_get_u32(celemetry_packet_t *packet, uint32_t *value, uint8_t number);
 uint8_t celemetry_get_i32(celemetry_packet_t *packet, int32_t *value, uint8_t number);
-uint8_t celemetry_get_blob(celemetry_packet_t *packet, uint8_t* len, uint8_t *blob);
+uint8_t celemetry_get_blob(celemetry_packet_t *packet, uint8_t* len, uint8_t **blob);
 uint8_t celemetry_check_crc32(celemetry_packet_t *packet);
 size_t celemetry_cobs_encode(uint8_t *data, size_t length, uint8_t *buffer);
 size_t celemetry_cobs_decode(const uint8_t *buffer, size_t length, void *data);

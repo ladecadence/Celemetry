@@ -583,11 +583,11 @@ uint8_t celemetry_get_i32(celemetry_packet_t *packet, int32_t *value, uint8_t nu
     }
 }
 
-uint8_t celemetry_get_blob(celemetry_packet_t *packet, uint8_t* len, uint8_t *blob) {
+uint8_t celemetry_get_blob(celemetry_packet_t *packet, uint8_t* len, uint8_t **blob) {
     uint8_t *pblob = (uint8_t *)celemetry_get_field(packet, CELEMETRY_BLOB);
     if (pblob) {
         *len = *pblob;
-        blob = pblob+1;
+        *blob = pblob+1;
         return CELEMETRY_OK;
     } else {
         return CELEMETRY_ERR_FIELD;
