@@ -81,6 +81,17 @@ void main(void) {
             if (celemetry_get_u32(packet, &d2, 2) == CELEMETRY_OK) {
                 printf("Data2: %d\n", d2);
             }
+
+            uint8_t* blob;
+            uint8_t size;
+            if (celemetry_get_blob(packet2, &size, &blob) == CELEMETRY_OK) {
+              printf("Blob: ");
+              for (int i=0; i<size; i++) {
+                printf("0x%.02x ", blob[i]);
+              }
+              printf("\n");
+            }
+
             celemetry_free(packet2);
         }
         celemetry_free(packet);
