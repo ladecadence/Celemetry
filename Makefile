@@ -6,7 +6,7 @@ all: test ssdvtest
 test: $(TESTSRC)
 	gcc -g -o test tests/test.c src/celemetry.c
 
-ssdvtest: $(TESTSRC)
+ssdvtest: $(SSDVSRC)
 	gcc -g -o ssdvtest tests/ssdv.c src/celemetry.c
 
 clean:
