@@ -1,3 +1,5 @@
+# Celemetry
+
 Simple telemetry format that can be used with low resource platforms like 8-bit microcontrollers and low speed radio links.
 
 # Data format
@@ -32,7 +34,24 @@ Also you can encode custom data fields with the field markers:
 * 0x26: float32
 * 0x27: Blob: Custom lenght data array.
 
-## Library use example
+## Packet created with packet number 1236, a heading field of 100º and CRC32:
+ ```
+ packet number (1234)           heading (100)         crc32
+        |                           |                   |
+        v                           v                   v
+    +------+---------------------+------+-----------+------+---------------------+   
+    | 0x00 | 0x00 0x00 0x04 0xd2 | 0x09 | 0x00 0x64 | 0x0b | 0x59 0xf1 0x96 0x75 |
+    +------+---------------------+------+-----------+------+---------------------+
+```
+    
+ ## Encoded for transmission using COBS:
+```
+    +-----------------------------------------------------------------------+
+    | 0x01 0x01 0x01 0x04 0x04 0xd2 0x09 0x07 0x64 0x0b 0x59 0xf1 0x96 0x75 |
+    +-----------------------------------------------------------------------+
+```
+
+# Library use example
 ```c
     // create new packet
     celemetry_packet_t *packet = celemetry_new_packet(1234);
