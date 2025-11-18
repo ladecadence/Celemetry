@@ -134,6 +134,15 @@ uint8_t celemetry_add_field(celemetry_packet_t *packet, uint8_t field_type, uint
         }
         packet->size = packet->size + field_len + 2;
         break;
+    case CELEMETRY_SSDV:
+        // add field type
+        packet->data[packet->size] = field_type;
+        // add data as is
+        for (int i = 0; i < field_len; i++) {
+            packet->data[packet->size + 1 + i] = ((uint8_t *)field)[i];
+        }
+        packet->size = packet->size + field_len + 1;
+        break;
     default:
         return CELEMETRY_BAD_DATA;
     }
