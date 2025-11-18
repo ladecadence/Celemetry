@@ -34,7 +34,7 @@ Also you can encode custom data fields with the field markers:
 * 0x26: float32
 * 0x27: Blob: Custom lenght data array.
 
-## Packet created with packet number 1236, a heading field of 100º and CRC32:
+## Packet created with packet number 1234, a heading field of 100º and CRC32:
  ```
  packet number (1234)           heading (100)         crc32
         |                           |                   |
