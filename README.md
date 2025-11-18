@@ -9,18 +9,18 @@ Also the library provides functions to use Consistent Overhead Byte Stuffing (CO
 
 The library defines some usual telemetry fields:
 * 0x00: Packet number     - uint32
-* 0x01: Date              - uint32: date is stored in the format DDMMYY, like 031125 for 3th of November, 2025
-* 0x02: Time              - uint32: time is stored in the format HHMMSS, like 153205 for 15:32:05
-* 0x03: Milliseconds      - uint32 
-* 0x03: Milliseconds      - uint32 
-* 0x04: Mission ID        - uint32: Char array of max 6 characters, stored as a base40 encoded number
-* 0x05: Latitude          - float32: Decimal latitude
-* 0x06: Longitude         - float32: Decimal longitude
-* 0x07: Altitude          - uint32
-* 0x08: Heading           - uint16: 0 - 359º
-* 0x09: Ascension rate    - int8: -127 - 128 m/s
-* 0x0A: CRC32             - uint32: optional CRC32 calculation of all bytes in the packet (less the CRC32 field itself)
-* 0x0B: SSDV              - 128 bytes: SSDV packets are 256 bytes, as this is bigger than LoRa packet lenght, we need to split them in two packets, adding a byte to tell if it's part 0 or 1.
+* 0x01: Packet type       - uint8: idientifies different packet types
+* 0x02: Date              - uint32: date is stored in the format DDMMYY, like 031125 for 3th of November, 2025
+* 0x03: Time              - uint32: time is stored in the format HHMMSS, like 153205 for 15:32:05
+* 0x04: Milliseconds      - uint32 
+* 0x05: Mission ID        - uint32: Char array of max 6 characters, stored as a base40 encoded number
+* 0x06: Latitude          - float32: Decimal latitude
+* 0x07: Longitude         - float32: Decimal longitude
+* 0x08: Altitude          - uint32
+* 0x09: Heading           - uint16: 0 - 359º
+* 0x0A: Ascension rate    - int8: -127 - 128 m/s
+* 0x0B: CRC32             - uint32: optional CRC32 calculation of all bytes in the packet (less the CRC32 field itself)
+* 0x0C: SSDV              - 128 bytes: SSDV packets are 256 bytes, as this is bigger than LoRa packet lenght, we need to split them in two packets, adding a byte to tell if it's part 0 or 1.
 
 Also you can encode custom data fields with the field markers:
 * 0x20: uint8

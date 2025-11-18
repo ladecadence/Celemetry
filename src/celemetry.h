@@ -30,17 +30,18 @@
 
 // known fields
 #define CELEMETRY_PACKET_NUM 0x00
-#define CELEMETRY_DATE 0x01
-#define CELEMETRY_TIME 0x02
-#define CELEMETRY_MILLIS 0x03
-#define CELEMETRY_ID 0x04
-#define CELEMETRY_LAT 0x05
-#define CELEMETRY_LON 0x06
-#define CELEMETRY_ALT 0x07
-#define CELEMETRY_HDG 0x08
-#define CELEMETRY_ARATE 0x09
-#define CELEMETRY_CRC32 0x0A
-#define CELEMETRY_SSDV 0x0B
+#define CELEMETRY_PACKET_TYPE 0x01
+#define CELEMETRY_DATE 0x02
+#define CELEMETRY_TIME 0x03
+#define CELEMETRY_MILLIS 0x04
+#define CELEMETRY_ID 0x05
+#define CELEMETRY_LAT 0x06
+#define CELEMETRY_LON 0x07
+#define CELEMETRY_ALT 0x08
+#define CELEMETRY_HDG 0x09
+#define CELEMETRY_ARATE 0x0A
+#define CELEMETRY_CRC32 0x0B
+#define CELEMETRY_SSDV 0x0C
 
 // generic fields
 #define CELEMETRY_U8 0x20
@@ -54,6 +55,7 @@
 
 // field sizes
 #define CELEMETRY_PACKET_NUM_BYTES 4
+#define CELEMETRY_PACKET_TYPE_BYTES 1
 #define CELEMETRY_DATE_BYTES 4
 #define CELEMETRY_TIME_BYTES 4
 #define CELEMETRY_MILLIS_BYTES 4
@@ -88,6 +90,7 @@ uint8_t celemetry_add_crc32(celemetry_packet_t *packet);
 uint8_t celemetry_add_ssdv(celemetry_packet_t *packet, uint8_t part, uint8_t* ssdv);
 void *celemetry_get_field(celemetry_packet_t *packet, uint8_t field_type);
 uint8_t celemetry_get_packet_number(celemetry_packet_t *packet, uint32_t *packet_num);
+uint8_t celemetry_get_packet_type(celemetry_packet_t *packet, uint8_t *packet_type);
 uint8_t celemetry_get_id(celemetry_packet_t *packet, char *id);
 uint8_t celemetry_get_millis(celemetry_packet_t *packet, uint32_t *millis);
 uint8_t celemetry_get_lat(celemetry_packet_t *packet, float *lat);

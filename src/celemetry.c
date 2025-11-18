@@ -407,6 +407,16 @@ uint8_t celemetry_get_packet_number(celemetry_packet_t *packet, uint32_t *packet
     }
 }
 
+uint8_t celemetry_get_packet_type(celemetry_packet_t *packet, uint8_t *packet_type) {
+    uint8_t *ppacket_type = (uint8_t *)celemetry_get_field(packet, CELEMETRY_PACKET_NUM);
+    if (ppacket_type) {
+        *packet_type = *ppacket_type;
+        return CELEMETRY_OK;
+    } else {
+        return CELEMETRY_ERR_FIELD;
+    }
+}
+
 uint8_t celemetry_get_date(celemetry_packet_t *packet, char *date) {
     uint32_t *pdate = (uint32_t *)celemetry_get_field(packet, CELEMETRY_DATE);
     if (pdate) {
